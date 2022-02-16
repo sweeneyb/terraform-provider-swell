@@ -124,8 +124,20 @@ func resourceCategoryUpdate(ctx context.Context, d *schema.ResourceData, m inter
 }
 
 func resourceCategoryDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	// TODO this should be from m
+	client, _ := swell.NewClient()
+
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
+	id := d.Id()
+	var cat = swell.Category{
+		Id: id,
+	}
+	err := client.DeleteCategory(cat)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	d.SetId("")
 	return diags
 }

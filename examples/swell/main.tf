@@ -37,8 +37,3 @@ output "AeroPress" {
   value = data.swell_product.AeroPress
 }
 
-resource "swell_category" "coffee" {
-  name = "coffee items"
-  description = "items for coffee"
-  active = false
-}

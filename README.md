@@ -22,7 +22,7 @@ terraform init && terraform apply
 
 ## Resources
 ### Category
-Currently, only 3 fields are supported, and 'active' seems buggy
+Currently, only 3 fields are supported.
 
 resource "swell_category" "coffee" {
   name = "coffee items"

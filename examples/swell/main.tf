@@ -40,5 +40,5 @@ output "AeroPress" {
 resource "swell_category" "coffee" {
   name = "coffee items"
   description = "items for coffee"
-  active = true
+  active = false
 }

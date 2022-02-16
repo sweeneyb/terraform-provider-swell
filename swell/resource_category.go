@@ -3,6 +3,7 @@ package swell
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -16,6 +17,11 @@ func resourceCategory() *schema.Resource {
 		UpdateContext: resourceCategoryUpdate,
 		DeleteContext: resourceCategoryDelete,
 		Schema: map[string]*schema.Schema{
+			"last_updated": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"id": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
@@ -62,7 +68,7 @@ func resourceCategoryCreate(ctx context.Context, d *schema.ResourceData, m inter
 
 func resourceCategoryRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	// TODO this should be from m
-	client, err := swell.NewClient()
+	client, _ := swell.NewClient()
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -82,6 +88,38 @@ func resourceCategoryRead(ctx context.Context, d *schema.ResourceData, m interfa
 }
 
 func resourceCategoryUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+
+	// TODO this should be from m
+	client, _ := swell.NewClient()
+
+	id := d.Id()
+	var cat = swell.Category{
+		Id: id,
+	}
+	var anyChanges = false
+	if d.HasChange("name") {
+		cat.Name = d.Get("name").(string)
+		anyChanges = true
+	}
+
+	// BUG This never seems to go to false
+	if d.HasChange("active") {
+		cat.Active = d.Get("active").(bool)
+		anyChanges = true
+	}
+	if d.HasChange("description") {
+		cat.Description = d.Get("description").(string)
+		anyChanges = true
+	}
+	if anyChanges {
+		_, err := client.UpdateCategory(cat)
+		if err != nil {
+			return diag.FromErr(err)
+		}
+
+		d.Set("last_updated", time.Now().Format(time.RFC850))
+	}
+
 	return resourceCategoryRead(ctx, d, m)
 }
 

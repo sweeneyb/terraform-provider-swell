@@ -39,12 +39,15 @@ func resourceCategory() *schema.Resource {
 				Required: true,
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
 func resourceCategoryCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	// TODO this should be from m
-	client, err := swell.NewClient()
+	client, _ := swell.NewClient()
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics

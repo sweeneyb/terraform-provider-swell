@@ -19,3 +19,13 @@ Then, run the following command to initialize the workspace and apply the sample
 ```shell
 terraform init && terraform apply
 ```
+
+## Resources
+### Category
+Currently, only 3 fields are supported, and 'active' seems buggy
+
+resource "swell_category" "coffee" {
+  name = "coffee items"
+  description = "items for coffee"
+  active = false
+}

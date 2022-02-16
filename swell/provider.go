@@ -7,7 +7,9 @@ import (
 // Provider -
 func Provider() *schema.Provider {
 	return &schema.Provider{
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"swell_category": resourceCategory(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"swell_products": dataSourceProducts(),
 			"swell_product":  dataSourceProduct(),
